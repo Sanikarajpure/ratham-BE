@@ -12,14 +12,15 @@ const auth = () => async (req, res, next) => {
     if (!accessToken) {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized user!");
     }
-
-    let validToken = await userService.validateToken(accessToken);
+    let authtoken = accessToken.split(" ")[1];
+    let validToken = await userService.validateToken(authtoken);
 
     if (validToken && accessToken) {
       req.authenticated = validToken;
       next();
     }
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
