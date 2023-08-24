@@ -38,7 +38,7 @@ const createUser = async (
 const signInUniIdAndPassword = async (universityId, password) => {
   try {
     const user = await userService.findUserByUniId(universityId);
-    console.log(user);
+
     if (!user) {
       throw new ApiError(
         httpStatus.UNAUTHORIZED,

@@ -1,10 +1,12 @@
 const { ApiError } = require("../middlewares/apiError");
 const { User } = require("../models/user");
+const { Session } = require("../models/session");
 const { authService, userService } = require("../services");
 const {
   registerSchema,
   loginSchema,
 } = require("../validations/registerLoginValidations");
+const sessionController = require("./session.controller");
 const httpStatus = require("http-status");
 require("dotenv").config();
 
@@ -20,7 +22,6 @@ const authController = {
         if (await User.uniIdTaken(value.universityId)) {
           throw new ApiError(httpStatus.BAD_REQUEST, "User already exists!");
         }
-
         let user = await authService.createUser(
           value.email,
           value.password,
@@ -53,27 +54,13 @@ const authController = {
         //setting access token
         let token = await authService.genAuthToken(user);
 
-        res
-          .cookie("x-access-token", token, {
-            expires: authService.setExpiry(1),
-          })
-          .status(httpStatus.OK)
-          .send({
-            user,
-          });
+        res.status(httpStatus.OK).send({
+          user,
+          token,
+        });
       }
     } catch (error) {
       next(error);
-    }
-  },
-  async isauth(req, res, next) {
-    let auth = req.authenticated;
-
-    let _id = auth.id;
-    let user = await userService.findUserById(_id);
-
-    if (auth && user) {
-      res.status(httpStatus.OK).send(user);
     }
   },
 };

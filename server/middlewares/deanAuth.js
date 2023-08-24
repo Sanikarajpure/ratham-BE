@@ -4,7 +4,7 @@ const httpStatus = require("http-status");
 const userService = require("../services/user.service");
 const { ApiError } = require("./apiError");
 
-const auth = () => async (req, res, next) => {
+const deanAuth = () => async (req, res, next) => {
   try {
     let accessToken = req.headers["authorization"];
 
@@ -12,7 +12,7 @@ const auth = () => async (req, res, next) => {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized user!");
     }
     let authtoken = accessToken.split(" ")[1];
-    let validToken = await userService.validateToken(authtoken);
+    let validToken = await userService.validateDeanToken(authtoken);
 
     if (validToken && accessToken) {
       req.authenticated = validToken;
@@ -26,4 +26,4 @@ const auth = () => async (req, res, next) => {
   }
 };
 
-module.exports = auth;
+module.exports = deanAuth;

@@ -11,7 +11,7 @@ const registerSchema = Joi.object({
     .regex(CONSTANTS.APP_VALIDATIONS.strongPasswordRegex)
     .error(stringPassswordError)
     .required(),
-  firstName: Joi.string().min(4).max(255).required(),
+  firstName: Joi.string().min(3).max(255).required(),
   lastName: Joi.string().max(225),
   universityId: Joi.string().min(6).max(12).required(),
   role: Joi.string().min(4).max(8).required(),
